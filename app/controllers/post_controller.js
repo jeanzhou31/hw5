@@ -29,7 +29,7 @@ export const createPost = (req, res) => {
 export const getPosts = (req, res) => {
   Post.find()
   .then(results => {
-    res.json(cleanPosts(results).sort('created_at'));
+    res.json(cleanPosts(results).sort('-created_at'));
   })
   .catch(error => {
     res.json({ error });
