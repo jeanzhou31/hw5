@@ -27,9 +27,9 @@ export const createPost = (req, res) => {
 };
 
 export const getPosts = (req, res) => {
-  Post.find().sort('created_at')
+  Post.find()
   .then(results => {
-    res.json(cleanPosts(results));
+    res.json(cleanPosts(results).sort('created_at'));
   })
   .catch(error => {
     res.json({ error });
