@@ -7,6 +7,12 @@ import apiRouter from './router';
 // initialize
 const app = express();
 
+// DB Setup
+const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost/blog';
+mongoose.connect(mongoURI);
+// set mongoose promises to es6 default
+mongoose.Promise = global.Promise;
+
 // enable/disable cross origin resource sharing if necessary
 app.use(cors());
 
@@ -14,6 +20,8 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+// all of our routes will be prefixed with /api
+app.use('/api', apiRouter);
 
 // default index route
 app.get('/', (req, res) => {
@@ -26,11 +34,3 @@ const port = process.env.PORT || 9090;
 app.listen(port);
 
 console.log(`listening on: ${port}`);
-
-// DB Setup
-const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost/blog';
-mongoose.connect(mongoURI);
-// set mongoose promises to es6 default
-mongoose.Promise = global.Promise;
-
-app.use('/api', apiRouter);
