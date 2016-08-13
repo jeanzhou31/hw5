@@ -3,7 +3,7 @@ import Post from '../models/post_model';
 // this cleans the posts because we use id instead of dangling _id
 // and we purposefully don't return content here either
 const cleanPost = (post) => {
-  return { id: post._id, title: post.title, tags: post.tags, content: post.content };
+  return { id: post._id, title: post.title, tags: post.tags, content: post.content, author: post.author };
 };
 
 const cleanPosts = (posts) => {
@@ -17,6 +17,7 @@ export const createPost = (req, res) => {
   post.title = req.body.title;
   post.content = req.body.content;
   post.tags = req.body.tags;
+  post.author = req.user._id;
   post.save()
   .then(result => {
     res.json({ message: 'Post created!' });
@@ -28,8 +29,10 @@ export const createPost = (req, res) => {
 
 export const getPosts = (req, res) => {
   Post.find()
+  .sort({ createdAt: -1 })
+  .populate('author')
   .then(results => {
-    res.json(cleanPosts(results).sort('created_at'));
+    res.json(cleanPosts(results));
   })
   .catch(error => {
     res.json({ error });
@@ -38,6 +41,7 @@ export const getPosts = (req, res) => {
 
 export const getPost = (req, res) => {
   Post.findById(req.params.id)
+  .populate('author')
   .then(result => {
     res.json(cleanPost(result));
   })

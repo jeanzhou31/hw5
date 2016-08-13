@@ -24,9 +24,9 @@ export const signup = (req, res, next) => {
   // here you should do a mongo query to find if a user already exists with this email.
   User.findOne({ email })
   .then(result => {
-    if (result) {
+    if (result !== null) {
       // if user exists then return an error.
-      res.json({ message: 'User already exists' });
+      return res.status(422).send('A user with this email already exists');
     } else {
       // if not, use the User model to create a new user.
       const user = new User();
@@ -41,11 +41,11 @@ export const signup = (req, res, next) => {
         res.send({ token: tokenForUser(user) })
       )
       .catch(error => {
-        res.json({ message: 'Error saving' });
+        res.json({ message: 'Error in save' });
       });
     }
   })
   .catch(error => {
-    res.json({ message: 'Error in user lookup' });
+    res.json({ message: 'Error in findOne' });
   });
 };
