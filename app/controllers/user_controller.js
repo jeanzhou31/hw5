@@ -16,6 +16,7 @@ export const signup = (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
 
+  console.log(email, password);
   if (!email || !password) {
     return res.status(422).send('You must provide email and password');
   }
@@ -37,7 +38,7 @@ export const signup = (req, res, next) => {
       user.save()
       .then(
         // return a token
-        res.send({ token: tokenForUser(user) })
+        res.json({ token: tokenForUser(user) })
       )
       .catch(error => {
         res.json({ message: 'Error in save' });
